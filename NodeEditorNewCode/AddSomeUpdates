@@ -1,0 +1,22 @@
+
+# problem about cut edge throws exception sspos is None in calcPact In class QDMGraphicsEdgeBezier
+    - change code to # new code added:
+    /*
+     def boundingRect(self):
+         return self.shape().boundingRect()
+
+    def shape(self):
+        return self.calcPath()
+    */
+    but when remove new code not exception throws
+
+    and this new code for class cut edge QDMCutLine
+        def boundingRect(self):
+        return QRectF(0,0,1,1)
+
+        # return self.shape().boundingRect()
+
+    def shape(self):
+        poly = QPolygonF(self.line_points)
+
+# add zoom in and zoum ou by keys

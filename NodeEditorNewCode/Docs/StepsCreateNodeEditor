@@ -1,0 +1,50 @@
+1- first create windows NodeEditorWindows(QWidget)
+2- in constructor NodeEditorWindows create
+        # 2- create scene
+        self.scene=Scene()
+        # self.grScene=self.scene.grScene
+        # 1 - Create Graphic view
+        self.view=QDMGraphicsView(self.scene.grScene,self)
+             # in view run next :
+             class QDMGraphicsView(QGraphicsView):
+                def __init__(self,grScene,parent):
+                    super().__init__(parent)
+                    self.grScene=grScene # by sceane
+                    self.setScene(self.grScene)
+                def rightMouseButtonPress,rightMouseButtonRelease
+                def LeftMouseButtonPress,LeftMouseButtonRelease
+                # Change Mode drag and Drop
+                MODE_NOOP = 1
+                MODE_EDGE_DRAG = 2
+                EDGE_DRAG_START_THRESHOLD = 10
+                DEBUG =True
+
+            def addNodes(self):
+        self.node1 = Node(self.scene, "Node 01",
+                         inputs=[0, 2, 3], outputs=[1])
+        self.node1.setPos(-350, -250)
+        self.node2 = Node(self.scene, "Node 02",
+                         inputs=[0, 4, 5], outputs=[1]) # inputs[socket(Node2,0,L_B),
+                                                        # socket(Node2,1,L_B),socket(Node2,2,L_B)]
+                                                        # output (Socket(node 2,0,R_B) )
+        self.node2.setPos(-75, 0)
+        self.node3 = Node(self.scene, "Node 03",
+                         inputs=[0, 0, 2], outputs=[1])
+        self.node3.setPos(200, -150)
+        edge1=Edge(self.scene,self.node1.outputs[0],self.node2.inputs[0])
+        """ output (Socket(node 2,0,R_B) ) """
+        edge2=Edge(self.scene, self.node2.outputs[0], self.node3.inputs[2], type_edge=EDGE_TYPE_BEZIER)
+
+
+
+
+ 3- create class QDMGraphicsView(QGraphicsView):
+    inside this constructor __init__(self,grScene,parent)
+    this grScene <-   self.grScene=QDMGraphicsScene()
+    and parent <- NodeEditorWindows(QWidget) = self
+
+
+   /*************************************************/
+   win
+
+

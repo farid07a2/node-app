@@ -1,12 +1,15 @@
 import math
 import os
 
-from PySide2.QtCore import QLine
+from PySide2.QtCore import QLine, Signal
 from PySide2.QtGui import QColor, QPen, QPixmap, QBrush, QPainter
 from PySide2.QtWidgets import QGraphicsScene
 
 
 class QDMGraphicsScene (QGraphicsScene):
+    itemSelected = Signal()
+    itemDeselected = Signal()
+
     def __init__(self,scene,parent=None):
         super().__init__(parent)
         self.scene=scene
@@ -44,6 +47,10 @@ class QDMGraphicsScene (QGraphicsScene):
     #     view = self.views()[0]
     #     print("Selection changed")
 
+
+    # the drag events won't be allowed until dragMoveEvent is overridden
+    def dragMoveEvent(self, event):
+        pass
 
     def setGrScene(self,width,height):
         self.setSceneRect(-width // 2, -height // 2, width, height)

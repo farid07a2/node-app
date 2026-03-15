@@ -35,21 +35,40 @@ class NodeEditorWidget(QWidget):
         self.view=QDMGraphicsView(self.scene.grScene,self)
         # self.view.setScene(self.grScene)
         self.layout.addWidget(self.view)
-        self.addNodes()
+        # self.addNodes()
         # self.addDebugContent()
 
         # self.show()
 
     def isModified(self):
-        return self.scene.has_been_modified
+        return self.scene.isModified()
 
     def isFilenameSet(self):
         return self.filename is not None
+
+    def getSelectedItems(self):
+        # return self.scene.grScene.selectedItems()
+        return self.scene.getSelectedItems()
+
+    def hasSelectedItems(self):
+        return self.getSelectedItems() != []
+
+    def canUndo(self):
+        return self.scene.history.canUndo()
+    def canRedo(self):
+        return self.scene.history.canRedo()
+
 
     def getUserFriendlyFilename(self):
         name = os.path.basename(self.filename) if self.isFilenameSet() else "New Graph"
         # TODO: add * has_been_modified logic here
         return name + ("*" if self.isModified() else "")
+
+    def fileNew(self):
+        self.scene.clear()
+        self.filename = None
+        self.scene.history.clear()
+        self.scene.history.storeInitialHistoyStamp()
 
     def fileload(self,filename):
         QApplication.setOverrideCursor(Qt.WaitCursor)
@@ -57,6 +76,9 @@ class NodeEditorWidget(QWidget):
             self.scene.loadFromFile(filename)
             self.filename = filename
             # clear history
+            self.scene.history.clear()
+            self.scene.history.storeInitialHistoyStamp()
+
             return True
         except InvalidFile as e :
             print(e)
@@ -96,6 +118,8 @@ class NodeEditorWidget(QWidget):
 
         """ output (Socket(node 2,0,R_B) ) """
         edge2=Edge(self.scene, self.node2.outputs[0], self.node3.inputs[2], type_edge=EDGE_TYPE_BEZIER)
+        self.scene.history.storeInitialHistoyStamp()
+
 
     def addDebugContent(self):
         greenBrush=QBrush(Qt.green)

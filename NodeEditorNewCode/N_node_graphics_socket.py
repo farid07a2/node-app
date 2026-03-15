@@ -2,7 +2,7 @@ from PySide2.QtCore import QRectF
 from PySide2.QtGui import QColor, QPen, QBrush
 from PySide2.QtWidgets import QGraphicsItem
 
-
+DEBUG = False
 class QDMGraphicsSocket(QGraphicsItem):
     def __init__(self,socket=None,socket_type=1):
 
@@ -47,4 +47,4 @@ class QDMGraphicsSocket(QGraphicsItem):
                        )
 
     def mousePressEvent(self, event):
-        print('socket was clicked')
+        if DEBUG:print('socket was clicked')

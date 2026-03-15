@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from PySide2.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit
 
 from NodeEditorNewCode.N_node_serializable import Serializable
@@ -23,9 +25,11 @@ class QDMNodeContentWidget(QWidget,Serializable):
         self.node.scene.grScene.views()[0].editingFlag=value # return list of views but we choose the first
 
     def serialize(self):
-        return {}
+        # return {}
+        return OrderedDict([])
+
     def deserialize(self,data,hashmap={}):
-        return False
+        return True
 
 
 class QDMTextEdit(QTextEdit):

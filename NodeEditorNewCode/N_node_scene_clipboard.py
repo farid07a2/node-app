@@ -66,7 +66,7 @@ class SceneClipboard:
 
 
     def deserializeFromClipboard(self,data):
-        print("deserialize from clipboard, data : ",data)
+        if DEBUG:print("deserialize from clipboard, data : ",data)
         hashmap={}
 
         # calculate mouse pointer - scene position
@@ -93,7 +93,8 @@ class SceneClipboard:
 
         # create each node
         for node_data in data['nodes']:
-            new_node = Node(self.scene)
+            # new_node = Node(self.scene)
+            new_node = self.scene.getNodeClassFromData(node_data)(self.scene)
             new_node.deserialize(node_data,hashmap,restore_id=False)
 
             # readjust the new node

@@ -1,0 +1,106 @@
+{
+    "id": 2606322624704,
+    "scene_width": 64000,
+    "scene_height": 64000,
+    "nodes": [
+        {
+            "id": 2606322625664,
+            "title": "Input",
+            "pos_x": -227.0,
+            "pos_y": 1.0,
+            "inputs": [],
+            "outputs": [
+                {
+                    "id": 2606322625904,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 6,
+                    "socket_type": 3
+                }
+            ],
+            "content": {}
+        },
+        {
+            "id": 2606322625808,
+            "title": "Output",
+            "pos_x": -176.0,
+            "pos_y": -162.0,
+            "inputs": [
+                {
+                    "id": 2606322626288,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 3,
+                    "socket_type": 1
+                }
+            ],
+            "outputs": [],
+            "content": {}
+        },
+        {
+            "id": 2606322626240,
+            "title": "Add",
+            "pos_x": 127.0,
+            "pos_y": -53.0,
+            "inputs": [
+                {
+                    "id": 2606322626768,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 3,
+                    "socket_type": 2
+                },
+                {
+                    "id": 2606322626912,
+                    "index": 1,
+                    "multi_edges": false,
+                    "position": 3,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 2606322626960,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 6,
+                    "socket_type": 1
+                }
+            ],
+            "content": {}
+        },
+        {
+            "id": 2606322626816,
+            "title": "Substraction",
+            "pos_x": 59.0,
+            "pos_y": 82.0,
+            "inputs": [
+                {
+                    "id": 2606322627392,
+                    "index": 0,
+                    "multi_edges": false,
+                    "position": 3,
+                    "socket_type": 2
+                },
+                {
+                    "id": 2606322627440,
+                    "index": 1,
+                    "multi_edges": false,
+                    "position": 3,
+                    "socket_type": 2
+                }
+            ],
+            "outputs": [
+                {
+                    "id": 2606322627680,
+                    "index": 0,
+                    "multi_edges": true,
+                    "position": 6,
+                    "socket_type": 1
+                }
+            ],
+            "content": {}
+        }
+    ],
+    "edges": []
+}

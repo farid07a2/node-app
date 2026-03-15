@@ -10,14 +10,29 @@ from NodeEditorNewCode.N_node_socket import LEFT_BOTTOM, LEFT_TOP, RIGHT_TOP, RI
 
 EDGE_CP_ROUNDNESS = 100
 
+DEBUG = False
 class QDMGraphicsEdge(QGraphicsPathItem):
     def __init__(self, edge, parent=None):
         super().__init__(parent)
 
         self.edge = edge
-        self.setZValue(0)
+
+        # init our flags
+        self._last_selected_state = False
+        # init our variables
+        self.posSource = [0, 0]
+        self.posDestination = [200, 100]
+
+        self.initAssets()
+        self.initUI()
+
+    def initUI(self):
+        self.setFlags(QGraphicsItem.ItemIsSelectable)
+        self.setZValue(-1)
+
+    def initAssets(self):
         self._color = QColor("#001000")
-        self._color_selected=QColor("#00ff00")
+        self._color_selected = QColor("#00ff00")
         self._pen = QPen(self._color)
         self._pen_selected = QPen(self._color_selected)
         self._pen_dragging = QPen(self._color)
@@ -26,10 +41,18 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         self._pen_selected.setWidthF(2.0)
         self._pen_dragging.setWidthF(2.0)
 
-        self.setFlags(QGraphicsItem.ItemIsSelectable)
+    def onSelected(self):
+        if DEBUG:
+            print("- grEdge onSelected")
+        self.edge.scene.grScene.itemSelected.emit()
 
-        self.posSource = [0, 0]
-        self.posDestination = [200, 100]
+    def mouseReleaseEvent(self, event):
+        super().mouseReleaseEvent(event)
+        if self._last_selected_state != self.isSelected():
+            self.edge.scene.resetLastSelectedStates()
+            self._last_selected_state = self.isSelected()
+            self.onSelected()
+
 
     def setSource(self, x, y):
         self.posSource = [x, y]

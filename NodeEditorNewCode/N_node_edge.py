@@ -197,4 +197,5 @@ class Edge(Serializable):
         self.start_socket = hashmap[data['start']]
         self.end_socket = hashmap[data['end']]
         self.edge_type = data['edge_type'] # this setter for create edge (Bezier or direct and update)
+
         return False

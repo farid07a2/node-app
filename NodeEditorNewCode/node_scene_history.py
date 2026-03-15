@@ -1,48 +1,75 @@
 from NodeEditorNewCode.N_node_graphics_edge import QDMGraphicsEdge
+from NodeEditorNewCode.utils import dumpException
 
 DEBUG =False
 class SceneHistory():
     def __init__(self,scene):
         self.scene=scene
-        self.history_stack=[]
-        self.history_current_step=-1
-        self.history_limit=8
+
+        self.history_limit=32
+        self.clear()
+
+        self._history_modified_listeners = []
+
+
+    def clear(self):
+        self.history_stack = []
+        self.history_current_step = -1
+
+    def storeInitialHistoyStamp(self):
+        self.storeHistory("initial history Stamp")
+
+    def canUndo(self):
+        return self.history_current_step>0
 
     def undo(self):
         if DEBUG: print("UNDO")
-        if self.history_current_step>0:
+        if self.canUndo():
             self.history_current_step -=1
             self.restoreHistory()
+            self.scene.has_been_modified = True
 
+    def canRedo(self):
+        return self.history_current_step+1 < len(self.history_stack)
 
     def redo(self):
         if DEBUG: print("redo")
-        if self.history_current_step+1 < len(self.history_stack):
+        if self.canRedo():
             self.history_current_step +=1
             self.restoreHistory()
+            self.scene.has_been_modified = True
+
+    def addHistoryModifiedListener(self,callback):
+        self._history_modified_listeners.append(callback)
 
     def restoreHistory(self):
         if DEBUG: print("Restoring history.... current_step:@%d " % self.history_current_step,
                         " {%d} " % len(self.history_stack))
         self.restoreHistoryStamp(self.history_stack[self.history_current_step])
+        for callback in self._history_modified_listeners:
+            callback()
+
+
+
 
     def restoreHistoryStamp(self,history_stamp):
         if DEBUG: print("RHS: ",history_stamp['desc'])
-        self.scene.deserialize(history_stamp['snapshot'])
+        try:
+            self.scene.deserialize(history_stamp['snapshot'])
 
-        # for restore selection
-        for edge_id in history_stamp['selection']['edges']:
-            for edge in self.scene.edges:
-                if edge.id == edge_id:
-                    edge.grEdge.setSelected(True)
-                    break
+            # for restore selection
+            for edge_id in history_stamp['selection']['edges']:
+                for edge in self.scene.edges:
+                    if edge.id == edge_id:
+                        edge.grEdge.setSelected(True)
+                        break
 
-        for node_id in history_stamp['selection']['nodes']:
-            for node in self.scene.nodes:
-                if node_id == node.id:
-                    node.grNode.setSelected(True)
-                    break
-
+            for node_id in history_stamp['selection']['nodes']:
+                for node in self.scene.nodes:
+                    if node_id == node.id:
+                        node.grNode.setSelected(True)
+                        break
+        except Exception as e: dumpException(e)
 
     def storeHistory(self,desc,setModified=False):
         if setModified:
@@ -67,15 +94,20 @@ class SceneHistory():
         self.history_stack.append(hs)
         self.history_current_step +=1
         if DEBUG: print(" -- setting step to:",self.history_current_step)
+        # always trigger history modified (for i.e. updateEditMenu)
+        for callback in self._history_modified_listeners:
+            callback()
 
     def createHistoryStamp(self,desc):
         sel_obj={
             'nodes':[],
             'edges':[]
         }
+
         for item in self.scene.grScene.selectedItems():
             if hasattr(item,'node'):
                 sel_obj['nodes'].append(item.node.id)
+
             elif isinstance(item,QDMGraphicsEdge):
                 sel_obj['edges'].append(item.edge.id)
 

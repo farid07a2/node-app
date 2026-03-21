@@ -5,8 +5,10 @@ from PySide2.QtGui import QKeySequence, QIcon
 from PySide2.QtWidgets import QMainWindow, QMdiArea, QWidget, QListWidget, QDockWidget, QAction, QMessageBox, \
     QFileDialog
 
-from NodeEditorNewCode.calculator.app_conf import register_node, CALC_NODES
-from NodeEditorNewCode.calculator.app_conf_nodes import *
+# from NodeEditorNewCode.calculator.app_conf import register_node, CALC_NODES
+# from NodeEditorNewCode.calculator.app_conf_nodes import *
+from NodeEditorNewCode.calculator.app_conf import *
+
 
 from NodeEditorNewCode.calculator.app_drag_listbox import QDMDragListbox
 from NodeEditorNewCode.calculator.app_sub_window import CalculatorSubWindow
@@ -30,11 +32,14 @@ class CalculatorWindow(NodeEditorWindow):
         self.name_product = 'Calculator NodeEditor'
 
         # get dir parent of this file calc_window "__file__" means this file
+
         self.stylesheet_filename = os.path.join(os.path.dirname(__file__), "qss/nodeeditor.qss")
 
         loadStyleSheets(os.path.join(os.path.dirname(__file__), "qss/nodeeditor-dark.qss"),
                         self.stylesheet_filename
                         )
+
+
 
         self.empty_icon = QIcon(".")
 

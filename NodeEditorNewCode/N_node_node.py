@@ -36,6 +36,77 @@ class Node(Serializable):
         self.outputs = []
         self.initSockets(inputs,outputs)
 
+        self._is_dirty = False
+        self._is_invalid = False
+
+
+
+    def isDirty(self):
+        return self._is_dirty
+
+    def markDirty(self,new_value=True):
+        self._is_dirty = new_value
+        if self._is_dirty: self.onMarkedDirty()
+
+
+    def onMarkedDirty(self):
+        pass
+
+    def markChildrenDirty(self,new_value = True):
+        for other_nodes in self.getChildrenNodes():
+            other_nodes.markDirty(new_value)
+
+    def markDescendantDirty(self,new_value=True):
+
+        for other_node in self.getChildrenNodes():
+            other_node.markDirty(new_value)
+            other_node.markChildrenDirty(new_value)
+
+    def isInvalid(self):
+        return self._is_invalid
+
+    def markInvalid(self,new_value=True):
+        self._is_invalid=new_value
+        if self._is_invalid: self.onMarkedInvalid()
+
+    def onMarkedInvalid(self):
+        pass
+
+    def markChildrenInvalid(self, new_value=True):
+        for other_nodes in self.getChildrenNodes():
+            other_nodes.markInvalid(new_value)
+
+    def markDescendantInvalid (self, new_value=True):
+
+        for other_node in self.getChildrenNodes():
+            other_node.markInvalid(new_value)
+            other_node.markChildrenInvalid(new_value)
+
+
+    def eval(self):
+        self.markDirty(False)
+        self.markInvalid(False)
+        return 0
+
+    def evalChildren(self):
+        for node in self.getChildrenNodes():
+            node.eval()
+
+    def getChildrenNodes(self):
+        if self.outputs == [] : return []
+        other_nodes = []
+
+        for ix in range(len(self.outputs)):
+            # for edge in self.outputs[0].edges:
+            for edge in self.outputs[ix].edges:
+                # other_node = edge.getOtherSocket(self.outputs[0]).node
+                other_node = edge.getOtherSocket(self.outputs[ix]).node
+                other_nodes.append(other_node)
+
+        return other_nodes
+
+
+
 
     def initInnerClasses(self):
         self.content = QDMNodeContentWidget(self)

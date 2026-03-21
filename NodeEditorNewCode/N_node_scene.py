@@ -111,10 +111,12 @@ class Scene(Serializable):
         self._item_deselected_listeners.append(callback)
 
     def addDragEnterListener(self, callback):
-        self.grScene.views()[0].addDragEnterListener(callback)
+        # self.grScene.views()[0].addDragEnterListener(callback)
+        self.getView().addDragEnterListener(callback)
 
     def addDropListener(self, callback):
-        self.grScene.views()[0].addDropListener(callback)
+        # self.grScene.views()[0].addDropListener(callback)
+        self.getView().addDropListener(callback)
 
     # custom flag to detect node or edge has been selected
     def resetLastSelectedStates(self):
@@ -131,6 +133,11 @@ class Scene(Serializable):
         #     self.nodes.remove(node)
         # else: print("!W:","Sceen :: removeNode"," Wanna remove node:",node,"from self.nodes but it's not in the list!")
 
+    def getItemAt(self,pos):
+        return self.getView().itemAt(pos)
+
+    def getView(self):
+        return self.grScene.views()[0]
 
 
     def addEdge(self,edge):

@@ -14,7 +14,8 @@ class QDMNodeContentWidget(QWidget,Serializable):
 
     def initUI(self):
         self.layout=QVBoxLayout()
-        self.layout.setContentsMargins(0,0,0,0)
+        # self.layout.setContentsMargins(0,0,0,0)
+        self.layout.setContentsMargins(5,5,5,5)
         self.setLayout(self.layout)
 
         self.wdg_label=QLabel("Some title")
@@ -22,7 +23,8 @@ class QDMNodeContentWidget(QWidget,Serializable):
         self.layout.addWidget(QDMTextEdit("Hello"))
 
     def setEditingFlag(self,value):
-        self.node.scene.grScene.views()[0].editingFlag=value # return list of views but we choose the first
+        # self.node.scene.grScene.views()[0].editingFlag=value # return list of views but we choose the first
+        self.node.scene.getView().editingFlag=value # return list of views but we choose the first
 
     def serialize(self):
         # return {}

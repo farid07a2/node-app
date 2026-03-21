@@ -237,7 +237,8 @@ class NodeEditorWindow(QMainWindow):
         if DEBUG:
             print('onEditDelete')
         if self.getCurrentNodeEditorWidget():
-            self.getCurrentNodeEditorWidget().scene.grScene.views()[0].deleteSelected()
+            # self.getCurrentNodeEditorWidget().scene.grScene.views()[0].deleteSelected()
+            self.getCurrentNodeEditorWidget().scene.getView().deleteSelected()
 
     def onEditUndo(self):
         if DEBUG:

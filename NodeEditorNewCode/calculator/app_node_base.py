@@ -1,3 +1,5 @@
+from PySide2.QtCore import QRectF
+from PySide2.QtGui import QImage, QPainter
 from PySide2.QtWidgets import QLabel
 
 from NodeEditorNewCode.N_node_content_widget import QDMNodeContentWidget
@@ -12,9 +14,27 @@ class CalcGraphicsNode(QDMGraphicsNode):
         self.width = 160
         self.height = 74
         self.edge_roundness = 8
-        self.edge_padding = 0
-        self.title_horizontal_padding = 8
-        self.title_vertical_padding = 10
+        self.edge_padding = 10
+        # self.title_horizontal_padding = 8
+        # self.title_vertical_padding = 10
+        self.title_horizontal_padding = 10
+        self.title_vertical_padding = 5
+
+    def initAssets(self):
+        super().initAssets()
+        self.icons = QImage("icons/status_icons.png")
+
+    def paint(self, painter: QPainter, option, widget=None):
+        super().paint(painter,option,widget)
+        offset = 24.0
+
+        if self.node.isDirty(): offset = 0.0
+        if self.node.isInvalid(): offset = 48.0
+        painter.drawImage(
+            QRectF(-10,-10,24.0,24.0),
+            self.icons,
+            QRectF(offset,0,24.0,24.0)
+        )
 
 
 class CalcContent(QDMNodeContentWidget):

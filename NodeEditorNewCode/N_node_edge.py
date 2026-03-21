@@ -50,6 +50,11 @@ class Edge(Serializable):
         # return  "<Node %s>"+(hex(id(self)))
         return "<Edge %s....%s>" % ((hex(id(self)))[2:5] , hex(id(self))[-3:])
 
+    def getOtherSocket(self,known_socket):
+        return self.start_socket if known_socket == self.end_socket else self.end_socket
+
+
+
     @property
     def start_socket(self): return self._start_socket
 

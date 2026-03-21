@@ -5,7 +5,7 @@ from PySide2.QtWidgets import QApplication
 
 
 def dumpException(e):
-    print("EXCEPTION:", e)
+    print("EXCEPTION:" % e.__class__.__name__, e)
     traceback.print_tb(e.__traceback__)
 
 

@@ -15,8 +15,9 @@ if __name__=="__main__":
 
     module_path = os.path.dirname(inspect.getfile(wnd.__class__))
 
-    styleSheet_filename = os.path.join(module_path, "qss/nodestyle.qss")
+    # styleSheet_filename = os.path.join(module_path, "qss/nodestyle.qss")
 
-    loadStyleSheet(styleSheet_filename)
+    # loadStyleSheet(styleSheet_filename)
+
     sys.exit(app.exec_())
 

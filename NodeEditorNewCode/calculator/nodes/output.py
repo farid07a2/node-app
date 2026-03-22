@@ -8,7 +8,7 @@ from NodeEditorNewCode.calculator.app_node_base import CalcNode, CalcGraphicsNod
 
 class CalcOutputContent(QDMNodeContentWidget):
     def initUI(self):
-        self.lbl = QLabel("42",self)
+        self.lbl = QLabel("result",self)
         self.lbl.setAlignment(Qt.AlignLeft)
         self.lbl.setObjectName(self.node.content_label_objname)
 
@@ -28,6 +28,27 @@ class CalcNode_OUTPUT(CalcNode):
         self.content = CalcOutputContent(self)
         self.grNode = CalcGraphicsNode(self)
 
+    def evalImplementation(self):
+        input_node = self.getInput(0)
+        if not input_node:
+            self.grNode.setToolTip("Input is Not Connected ")
+            self.markInvalid()
+            return
+
+
+        val = input_node.eval()
+        if val is None:
+            self.grNode.setToolTip("Input is NaN ")
+            self.markInvalid()
+            return
+
+
+        self.content.lbl.setText("%d" % val)
+        self.markDirty(False)
+        self.markInvalid(False)
+
+        self.grNode.setToolTip("")
+        return val
 
 # Way how to register by function call
 # register_node(OP_NODE_ADD,CalcNode_Add)

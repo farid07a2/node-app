@@ -2,6 +2,7 @@ from NodeEditorNewCode.N_node_graphics_edge import QDMGraphicsEdgeDirect, QDMGra
 from NodeEditorNewCode.N_node_graphics_node import QDMGraphicsNode
 # from NodeEditorNewCode.N_node_scene import Scene
 from NodeEditorNewCode.N_node_serializable import Serializable
+from NodeEditorNewCode.utils import dumpException
 
 EDGE_TYPE_DIRECT = 1
 EDGE_TYPE_BEZIER = 2
@@ -170,6 +171,9 @@ class Edge(Serializable):
         self.start_socket=None
 
     def remove(self):
+        old_sockets = [self.start_socket,self.end_socket]
+
+
         if DEBUG: print("# Removing Edge")
         if DEBUG: print(" - remove edge from all sockets")
         self.remove_from_socket()
@@ -183,6 +187,16 @@ class Edge(Serializable):
             pass
         # except Exception as e:
         #     print("EXCEPTION:",e,type(e))
+
+        try:
+            # notify nodes from old sockets
+            for socket in old_sockets:
+                if socket and socket.node :
+                    socket.node.onEdgeConnectionChanged(self)
+                    if socket.is_input: socket.node.onInputChanged(self)
+        except Exception as e: dumpException(e)
+
+
         if DEBUG: print(" -- everything is done")
 
     def serialize(self):

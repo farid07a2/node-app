@@ -48,7 +48,6 @@ class Node(Serializable):
         self._is_dirty = new_value
         if self._is_dirty: self.onMarkedDirty()
 
-
     def onMarkedDirty(self):
         pass
 
@@ -106,6 +105,33 @@ class Node(Serializable):
         return other_nodes
 
 
+    def getInput(self,index=0):
+        try:
+            edge = self.inputs[index].edges[0]
+            socket = edge.getOtherSocket(self.inputs[index])
+            return socket.node
+        except IndexError:
+            print("EXC: Trying to get input, but none is attached to",self)
+            return None
+        except Exception as e:
+            dumpException(e)
+            return None
+
+    def getInputs(self,index = 0):
+        ins = []
+
+        for edge in self.inputs[index].edges:
+            other_socket = edge.getOtherSocket(self.inputs[index])
+            ins.append(other_socket.node)
+        return ins
+
+    def getOutputs(self,index=0):
+        outs = []
+
+        for edge in self.outputs[index].edges:
+            other_socket = edge.getOtherSocket(self.outputs[index])
+            outs.append(other_socket.node)
+        return outs
 
 
     def initInnerClasses(self):
@@ -143,6 +169,14 @@ class Node(Serializable):
                             multi_edges=self.output_multi_edged,count_on_this_node_side=len(outputs),is_input=False)
             counter += 1
             self.outputs.append(socket)
+
+    def onEdgeConnectionChanged(self,new_edge):
+        print("%s :: onEdgeConnectionChanged " % self.__class__.__name__,new_edge)
+
+    def onInputChanged(self,new_edge):
+        print("%s :: onInputChanged " % self.__class__.__name__,new_edge)
+        self.markDirty()
+        self.markDescendantDirty()
 
 
     def __str__(self):

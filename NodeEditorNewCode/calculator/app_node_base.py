@@ -6,6 +6,7 @@ from NodeEditorNewCode.N_node_content_widget import QDMNodeContentWidget
 from NodeEditorNewCode.N_node_graphics_node import QDMGraphicsNode
 from NodeEditorNewCode.N_node_node import Node
 from NodeEditorNewCode.N_node_socket import LEFT_CENTER, RIGHT_CENTER
+from NodeEditorNewCode.utils import dumpException
 
 
 class CalcGraphicsNode(QDMGraphicsNode):
@@ -44,7 +45,7 @@ class CalcContent(QDMNodeContentWidget):
         lbl.setObjectName(self.node.content_label_objname)
 
 
-
+DEBUG = True
 class CalcNode(Node):
     icon = ""
     op_code = 0
@@ -67,6 +68,10 @@ class CalcNode(Node):
         # self.content_label_objname = content_label_objname
         super().__init__(scene, self.__class__.op_title,inputs, outputs)
 
+        self.value = None
+        # it's really important to mark all nodes Dirty by default
+        self.markDirty()
+
 
     def initInnerClasses(self):
         self.content = CalcContent(self)
@@ -76,6 +81,63 @@ class CalcNode(Node):
         super().initSettings()
         self.input_socket_position = LEFT_CENTER
         self.output_socket_position = RIGHT_CENTER
+
+    def evalOperation(self,input1,input2):
+        return 123
+
+
+    def evalImplementation(self):
+        i1 = self.getInput(0)
+        i2 = self.getInput(1)
+
+        if i1 is None or i2 is None:
+            self.markInvalid()
+            self.markDescendantDirty()
+            self.grNode.setToolTip("Connect all inputs")
+            return None
+        else:
+            # val = i1.eval() + i2.eval()
+            val = self.evalOperation(i1.eval(), i2.eval())
+            self.value = val
+            self.markDirty(False)
+            self.markInvalid(False)
+            self.grNode.setToolTip("")
+
+            self.markDescendantDirty()
+            self.evalChildren()
+            return val
+
+    def eval(self):
+        if not self.isDirty() and not self.isInvalid():
+            if DEBUG:
+                print(" _> returning cached %s value: " % self.__class__.__name__,self.value)
+            return self.value
+        try:
+            # val = 0
+            # return self.evalImplementation()
+            val =  self.evalImplementation()
+
+            # self.markDirty(False)
+            # self.markInvalid(False)
+            return val
+
+
+        except ValueError as e:
+            self.markInvalid()
+            self.grNode.setToolTip(str(e))
+            self.markDescendantDirty()
+
+        except Exception as e:
+            self.markInvalid()
+            self.grNode.setToolTip(str(e))
+            dumpException(e)
+
+
+    def onInputChanged(self,new_edge):
+        if DEBUG: print("%s :: onInputChanged" % self.__class__.__name__)
+
+        self.markDirty()
+        self.eval()
 
     def serialize(self):
         res = super().serialize()

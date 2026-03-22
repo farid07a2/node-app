@@ -244,6 +244,7 @@ class QDMGraphicsView(QGraphicsView):
         return None
 
     def cutIntersectingEdges(self):
+
         for ix in range (len(self.cutline.line_points)-1):
             p1 = self.cutline.line_points[ix]
             p2 = self.cutline.line_points[ix+1]
@@ -432,6 +433,7 @@ class QDMGraphicsView(QGraphicsView):
                     #
                     if not socket.is_multi_edges:
                         socket.removeAllEdges()
+
                     if not self.drag_start_socket.is_multi_edges:
                         socket.removeAllEdges()
 
@@ -447,7 +449,14 @@ class QDMGraphicsView(QGraphicsView):
                     # self.drag_edge.updatePositions()
 
                     new_edge =  Edge(self.grScene.scene,self.drag_start_socket,socket,type_edge=EDGE_TYPE_BEZIER)
+
                     if DEBUG: print("View::edgeDragEnd - created new edge:",new_edge," connecting",new_edge.start_socket,"<-->",new_edge.end_socket)
+
+                    for socket_item in [self.drag_start_socket,socket]:
+                        socket_item.node.onEdgeConnectionChanged(new_edge)
+
+                        if socket_item.is_input: socket_item.node.onInputChanged(new_edge)
+
                     self.grScene.scene.history.storeHistory("created new edge by dragging",setModified=True)
                     return True
 

@@ -44,8 +44,25 @@ class CalcNode_INPUT(CalcNode):
 
     def __init__(self, scene):
         super().__init__(scene, inputs=[], outputs=[3])
+        self.eval()
+
 
     def initInnerClasses(self):
         self.content =  CalcInputContent(self)
         self.grNode =  CalcGraphicsNode(self)
+        self.content.edit.textChanged.connect(self.onInputChanged)
+
+    def evalImplementation(self):
+        u_value = self.content.edit.text()
+        s_value = int(u_value)
+        self.value = s_value
+        self.markDirty(False)
+        self.markInvalid(False)
+
+        self.markDescendantInvalid(False)
+        self.markDescendantDirty()
+
+        self.grNode.setToolTip("")
+        self.evalChildren()
+        return self.value
 

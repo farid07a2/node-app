@@ -13,6 +13,35 @@ class CalcNode_Add(CalcNode):
     #     super().__init__(scene, OP_NODE_ADD, "Add", "+")
 
 
+    def evalOperation(self,input1,input2):
+        return input1 + input2
+
+    # def evalImplementation(self):
+        # self.markInvalid(False)
+        # self.markDirty(False)
+        # i1=self.getInput(0)
+        # i2=self.getInput(1)
+        #
+        # if not i1 or not i2:
+        #     self.markInvalid()
+        #     self.markDescendantDirty()
+        #     self.grNode.setToolTip("Connect all inputs")
+        #     return None
+        # else:
+        #     val = i1.eval() + i2.eval()
+        #     self.value = val
+        #     self.markDirty(False)
+        #     self.markInvalid(False)
+        #     self.grNode.setToolTip("")
+        #
+        #     self.markDescendantDirty()
+        #     self.evalChildren()
+        #     return val
+        # pass
+
+        # return 123
+
+
 @register_node(OP_NODE_SUB)
 class CalcNode_SUB(CalcNode):
 
@@ -24,6 +53,9 @@ class CalcNode_SUB(CalcNode):
 
     # def __init__(self, scene):
     #     super().__init__(scene, OP_NODE_SUB, "Substraction", "-")
+
+    def evalOperation(self,input1,input2):
+        return input1 - input2
 
 
 @register_node(OP_NODE_MUL)
@@ -37,6 +69,8 @@ class CalcNode_MUL(CalcNode):
     # def __init__(self, scene):
     #     super().__init__(scene, OP_NODE_MUL, "Multiplication", "*")
 
+    def evalOperation(self,input1,input2):
+        return input1 * input2
 
 @register_node(OP_NODE_DIV)
 class CalcNode_DIV(CalcNode):
@@ -48,3 +82,5 @@ class CalcNode_DIV(CalcNode):
 
     # def __init__(self, scene):
     #     super().__init__(scene, OP_NODE_DIV, "Division", "/")
+    def evalOperation(self,input1,input2):
+        return input1 / input2
